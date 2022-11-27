@@ -36,7 +36,7 @@ export default function Albums() {
   const loadAlbuns = async () => {
     try {
       // setIsLoading(true);
-      const { data } = await AlbumService.listAlbuns();
+      const { data } = await AlbumService.listAlbunsAll();
       // setHasError(false);
       setAlbuns(data);
     } catch {

@@ -5,12 +5,24 @@ class AlbumService {
     this.httpClient = new HttpClient('https://web-production-7847.up.railway.app/api');
   }
 
-  listAlbuns() {
-    return this.httpClient.get('/album');
+  listAlbunsAll() {
+    return this.httpClient.get('/album', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  }
+
+  listAlbunsVisible() {
+    return this.httpClient.get('/albumsVisiveis');
   }
 
   getAlbum(id) {
-    return this.httpClient.get(`/album/${id}`);
+    return this.httpClient.get(`/album/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
   }
 
   createAlbum(album) {

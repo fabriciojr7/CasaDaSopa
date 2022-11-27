@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import ContainerSection from '../components/ContainerSection';
 import TitleSection from '../components/TitleSection';
 import Button from '../../../components/Button';
@@ -12,6 +13,7 @@ import imageTeatro1 from '../../../assets/images/teatro1.jpeg';
 import imageTeatro2 from '../../../assets/images/teatro2.jpeg';
 
 export default function AboutUs() {
+  const navigate = useNavigate();
   return (
     <Container>
       <ContainerSection>
@@ -93,7 +95,9 @@ export default function AboutUs() {
             esperança para muitas pessoas.
           </p>
 
-          <Button>
+          <Button
+            onClick={() => navigate('/doacoes')}
+          >
             Solicitações
           </Button>
         </div>

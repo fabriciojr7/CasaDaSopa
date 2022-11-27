@@ -1,16 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TitleSection from '../components/TitleSection';
 import ContainerSection from '../components/ContainerSection';
+import AlbumService from '../../../services/AlbumService';
+import ImageModal from '../../../components/ImageModal';
+import AlbumGalery from '../components/AlbumGalery';
+
 import {
   Album,
 } from './styles';
 
+/*
 import image1 from '../../../assets/images/image1.jpeg';
 import image2 from '../../../assets/images/image2.jpeg';
 import image3 from '../../../assets/images/image3.jpeg';
 import image4 from '../../../assets/images/image4.jpeg';
-import ImageModal from '../../../components/ImageModal';
-import AlbumGalery from '../components/AlbumGalery';
 
 const albums = [
   {
@@ -51,11 +54,21 @@ const albums = [
     ],
   },
 
-];
+]; */
 
 export default function Gallery() {
+  const [albums, setAlbums] = useState([]);
   const [tempImage, setTempImage] = useState('');
   const [visibleImageModal, setVisibleImageModal] = useState(false);
+
+  useEffect(() => {
+    async function loadAlbuns() {
+      const { data } = await AlbumService.listAlbunsVisible();
+      setAlbums(data);
+    }
+
+    loadAlbuns();
+  }, []);
 
   const toggleVisibleImageModal = () => {
     setVisibleImageModal((prevState) => !prevState);
@@ -78,7 +91,7 @@ export default function Gallery() {
 
       {albums?.map((album) => (
         <Album key={album.id}>
-          <h2>{album.tituloAlbum}</h2>
+          <h2>{album.descricao}</h2>
           <AlbumGalery
             album={album.photos}
             getImage={getImage}

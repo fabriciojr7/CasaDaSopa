@@ -8,8 +8,8 @@ export default function AlbumGalery({ album, getImage }) {
     <Container>
       {
           album?.map((photo) => (
-            <Photo key={photo.id} onClick={() => getImage(photo.image)}>
-              <img src={photo.image} alt="" />
+            <Photo key={photo.id} onClick={() => getImage(photo.foto)}>
+              <img src={photo.foto} alt="" />
             </Photo>
           ))
       }

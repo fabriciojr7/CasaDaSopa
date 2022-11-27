@@ -75,7 +75,7 @@ export default function Donation() {
     <ContainerSection>
 
       <TitleSection
-        title="Contribua com a solicitação:"
+        title="Contribue com a doação:"
         subtitle={familyRequest?.titulo}
       />
 
