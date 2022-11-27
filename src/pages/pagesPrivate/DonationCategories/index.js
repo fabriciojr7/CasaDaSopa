@@ -1,32 +1,55 @@
 import { Link } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Content, Search } from './styles';
 import HeaderPage from '../components/HeaderPage';
 import Table from '../components/Table';
 import HeaderContent from '../components/HeaderContent';
 import Pagination from '../../../components/Pagination';
 import InputSearch from '../components/InputSearch';
+import CategoryDonationService from '../../../services/CategoryDonationService';
+import Loader from '../../../components/Loader';
 
 export default function DonationCategories() {
   const [donations] = useState([
     { id: 1, nome: 'Medicamentos', email: 'medicamento@email.com' },
     { id: 2, nome: 'Alimentos', email: 'alimento@email.com' },
   ]);
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
 
   const itensPerPage = 15;
-  const pages = Math.ceil(donations.length / itensPerPage);
+  const pages = Math.ceil(categories.length / itensPerPage);
   const startItens = currentPage * itensPerPage;
   const endIndex = startItens + itensPerPage;
-  const currentDonations = donations.slice(startItens, endIndex);
+  const currentDonations = categories.slice(startItens, endIndex);
+
+  const loadCategories = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await CategoryDonationService.listCategories();
+
+      //   setHasError(false);
+      setCategories(data);
+    } catch {
+    //   setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   return (
     <Container>
       <HeaderPage title="Categorias de doação" />
+      <Loader isLoading={isLoading} />
 
-      {donations.length > 0 && (
+      {categories.length > 0 && (
         <Search>
           <InputSearch
             value={searchTerm}
@@ -85,7 +108,7 @@ export default function DonationCategories() {
               <tbody>
                 {currentDonations.map((donation) => (
                   <tr key={donation.id}>
-                    <td data-title="Nome">{donation.nome}</td>
+                    <td data-title="Nome">{donation.descricao}</td>
                     <td data-title="E-mail">{donation.email}</td>
                     <td data-title="Ações">
                       <Link to={`/adm/categoriasdoacao/edit/${donation.id}`}>

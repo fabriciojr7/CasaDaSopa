@@ -3,7 +3,6 @@ import TitleSection from '../components/TitleSection';
 import ContainerSection from '../components/ContainerSection';
 import {
   Album,
-//   GaleryContainer, Photo,
 } from './styles';
 
 import image1 from '../../../assets/images/image1.jpeg';

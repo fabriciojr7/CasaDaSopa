@@ -11,10 +11,10 @@ import useErrors from '../../../../hooks/useErrors';
 import isEmailValid from '../../../../utils/isEmailValid';
 
 export default function DonationCategoryForm({
-  buttonLabel, onSubmit, donation,
+  buttonLabel, onSubmit, category,
 }) {
-  const [nome, setNome] = useState(donation?.nome);
-  const [email, setEmail] = useState(donation?.email);
+  const [descricao, setDescricao] = useState(category?.descricao);
+  const [email, setEmail] = useState(category?.email);
 
   const {
     errors,
@@ -23,21 +23,21 @@ export default function DonationCategoryForm({
     getErrorsMEssageByFieldName,
   } = useErrors();
 
-  const isFormInicial = (nome && email);
+  const isFormInicial = (descricao && email);
 
   const isFormValid = (isFormInicial && errors.length === 0);
 
-  const handleNomeChange = (e) => {
-    setNome(e.target.value);
+  const handleDescricaoChange = (e) => {
+    setDescricao(e.target.value);
 
     if (!e.target.value) {
-      setError({ field: 'nome', message: 'O nome é obrigatório.' });
+      setError({ field: 'descricao', message: 'A descrição é obrigatória.' });
     } else {
-      removeError('nome');
+      removeError('descricao');
       if (e.target.value.length < 3) {
-        setError({ field: 'nome-min', message: 'O nome deve ter pelo menos 3 caracteres.' });
+        setError({ field: 'descricao-min', message: 'A descrição deve ter pelo menos 3 caracteres.' });
       } else {
-        removeError('nome-min');
+        removeError('descricao-min');
       }
     }
   };
@@ -60,23 +60,22 @@ export default function DonationCategoryForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const dataContributors = {
-      nome,
-      email,
-      entidadeId: 1,
+    const dataCategories = {
+      descricao,
+      //   email,
     };
 
-    onSubmit(dataContributors);
+    onSubmit(dataCategories);
   };
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
-      <FormGrouping error={getErrorsMEssageByFieldName('nome') || getErrorsMEssageByFieldName('nome-min')}>
+      <FormGrouping error={getErrorsMEssageByFieldName('descricao') || getErrorsMEssageByFieldName('descricao-min')}>
         <Input
-          error={getErrorsMEssageByFieldName('nome') || getErrorsMEssageByFieldName('nome-min')}
-          label="Nome *"
-          value={nome}
-          change={handleNomeChange}
+          error={getErrorsMEssageByFieldName('descricao') || getErrorsMEssageByFieldName('descricao-min')}
+          label="Descrição *"
+          value={descricao}
+          change={handleDescricaoChange}
           max={60}
         />
       </FormGrouping>

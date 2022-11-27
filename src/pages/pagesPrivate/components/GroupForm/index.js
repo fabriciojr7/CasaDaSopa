@@ -42,15 +42,15 @@ export default function GroupForm({
     e.preventDefault();
 
     setIsSubmitting(true);
-    const data = new FormData();
-    data.append('nome', nome);
-    data.append('descricao', descricao);
+    const formData = new FormData();
+    formData.append('nome', nome);
+    formData.append('descricao', descricao);
     if (selectedFile) {
-      data.append('foto', selectedFile);
+      formData.append('foto', selectedFile);
     }
-    data.append('entidadeId', 1);
+    formData.append('entidadeId', 1);
 
-    onSubmit(data).finally(() => {
+    onSubmit(formData).finally(() => {
       setIsSubmitting(false);
     });
   };

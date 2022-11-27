@@ -36,33 +36,22 @@ class HttpClient {
   }
 
   async makeRequest(path, options) {
-    const headers = {};
+    const headers = new Headers();
 
-    let body = {};
-    if (options.body) {
-      headers['Content-Type'] = 'application/json';
+    if (options.body && !(options.body instanceof FormData)) {
+      headers.append('Content-type', 'application/json');
     }
 
     if (options.headers) {
       Object.entries(options.headers).forEach(([name, value]) => {
-        headers[name] = value;
+        headers.append(name, value);
       });
-    }
-
-    if (Object.values(headers).includes('multipart/form-data;boundary=----WebKitFormBoundaryIn312MOjBWdkffIM')) {
-      const formData = new FormData();
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [key, value] of Object.entries(formData)) {
-        formData.append(key, value);
-      } body = formData;
-    } else {
-      body = JSON.stringify(options.body);
     }
 
     const response = await fetch(`${this.baseURL}${path}`, {
       method: options.method,
-      body,
-      headers: new Headers(headers),
+      body: options.body instanceof FormData ? options.body : JSON.stringify(options.body),
+      headers,
     });
 
     let responseBody = null;

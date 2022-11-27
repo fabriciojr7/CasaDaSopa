@@ -18,7 +18,7 @@ export default function FileInput({ image, setImage }) {
   }, [image]);
 
   function handleImageChange(e) {
-    setImage(URL.createObjectURL(e.target.files[0]));
+    setImage(e.target.files[0]);
   }
 
   return (
@@ -44,7 +44,6 @@ export default function FileInput({ image, setImage }) {
               Imagem do grupo
             </div>
           )}
-
       </span>
     </File>
   );

@@ -22,7 +22,6 @@ class GroupService {
       body: group,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'multipart/form-data;boundary=----WebKitFormBoundaryIn312MOjBWdkffIM',
       },
     });
   }

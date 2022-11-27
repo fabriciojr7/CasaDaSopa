@@ -1,19 +1,24 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import {
+  useEffect,
   useState,
 } from 'react';
 
 import Button from '../../../../components/Button';
 import FormGrouping from '../../../../components/FormGrouping';
-import Input from '../../../../components/Input';
+// import Input from '../../../../components/Input';
 import Select from '../../../../components/Select';
 import TextArea from '../../../../components/TextArea';
 import useErrors from '../../../../hooks/useErrors';
+import CategoryDonationService from '../../../../services/CategoryDonationService';
 
 import { Form, ButtonContainer } from './styles';
 
 export default function FamilyRequestForm({ onSubmit, familyRequest }) {
   const [responsavel] = useState(JSON.parse(localStorage.getItem('responsavel')));
-  const [titulo, setTitulo] = useState(familyRequest?.titulo);
+  const [categoriaId, setCategoriaId] = useState(familyRequest?.categoria_id);
+  const [categories, setCategories] = useState([]);
+  //   const [titulo, setTitulo] = useState(familyRequest?.titulo);
   const [descricao, setDescricao] = useState(familyRequest?.descricao);
   const [status, setStatus] = useState(familyRequest?.status);
 
@@ -24,24 +29,32 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
     getErrorsMEssageByFieldName,
   } = useErrors();
 
-  const isFormInicial = (titulo && descricao);
+  const isFormInicial = (/* titulo && */ descricao);
 
   const isFormValid = (isFormInicial && errors.length === 0);
 
-  const handleTitleChange = (e) => {
-    setTitulo(e.target.value);
-
-    if (!e.target.value) {
-      setError({ field: 'titulo', message: 'O titúlo é obrigatório.' });
-    } else {
-      removeError('titulo');
-      if (e.target.value.length < 3) {
-        setError({ field: 'titulo-min', message: 'O titúlo tem pelo menos 3 caractéres.' });
-      } else {
-        removeError('titulo-min');
-      }
+  useEffect(() => {
+    async function loadCategories() {
+      const { data } = await CategoryDonationService.listCategories();
+      setCategories(data);
     }
-  };
+    loadCategories();
+  }, []);
+
+  //   const handleTitleChange = (e) => {
+  //     setTitulo(e.target.value);
+
+  //     if (!e.target.value) {
+  //       setError({ field: 'titulo', message: 'O titúlo é obrigatório.' });
+  //     } else {
+  //       removeError('titulo');
+  //       if (e.target.value.length < 3) {
+  //         setError({ field: 'titulo-min', message: 'O titúlo tem pelo menos 3 caractéres.' });
+  //       } else {
+  //         removeError('titulo-min');
+  //       }
+  //     }
+  //   };
 
   const handleDescricaoChange = (e) => {
     setDescricao(e.target.value);
@@ -63,7 +76,8 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
 
     const dataSolicitacao = {
       responsavelId: responsavel.id,
-      titulo,
+      categoriaId,
+      titulo: 'sfdsfs',
       descricao,
       nome: responsavel.nome,
       status,
@@ -74,14 +88,28 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGrouping error={getErrorsMEssageByFieldName('titulo') || getErrorsMEssageByFieldName('titulo-min')}>
+      <FormGrouping>
+        <Select
+          label="Categoria da doação *"
+          value={categoriaId}
+          change={(e) => setCategoriaId(e.target.value)}
+        >
+          <option value="">Informe a categoria</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>{category.descricao}</option>
+          ))}
+        </Select>
+      </FormGrouping>
+
+      {/* <FormGrouping error={getErrorsMEssageByFieldName('titulo') ||
+       getErrorsMEssageByFieldName('titulo-min')}>
         <Input
           error={getErrorsMEssageByFieldName('titulo') || getErrorsMEssageByFieldName('titulo-min')}
           label="Titulo da solicitação *"
           value={titulo}
           change={handleTitleChange}
         />
-      </FormGrouping>
+      </FormGrouping> */}
 
       <FormGrouping error={getErrorsMEssageByFieldName('descricao') || getErrorsMEssageByFieldName('descricao-min')}>
         <TextArea

@@ -9,8 +9,8 @@ class FamilyDonationService {
     return this.httpClient.get('/solicitacao');
   }
 
-  listFamilyDonation(idFamily) {
-    return this.httpClient.get(`/solicitacoesPorResponsavel/${idFamily}`, {
+  listFamilyDonation(id) {
+    return this.httpClient.get(`/solicitacoesPorResponsavel/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },

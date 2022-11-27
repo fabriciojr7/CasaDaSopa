@@ -1,5 +1,5 @@
 import {
-  // useEffect,
+  useEffect,
   useMemo, useState,
 } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -16,18 +16,15 @@ import GroupService from '../../../services/GroupService';
 import HeaderContent from '../components/HeaderContent';
 import HeaderPage from '../components/HeaderPage';
 import InputSearch from '../components/InputSearch';
-import gruposPDF from '../components/Reports/GruposRelatorio';
 // import SearchNotFound from '../components/SearchNotFound';
 import Table from '../components/Table';
 import Modal from '../../../components/Modal';
 import toast from '../../../utils/toast';
-import FileInput from '../../../components/FileInput';
+
+import AlbumService from '../../../services/AlbumService';
 
 export default function Albums() {
-  const [groups, setGroups] = useState([
-    { id: 1, nome: 'Dia das criaças' },
-    { id: 2, nome: 'Dia das mães' },
-  ]);
+  const [albuns, setAlbuns] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   //   const [isLoading, setIsLoading] = useState(true);
   //   const [hasError, setHasError] = useState(false);
@@ -35,45 +32,43 @@ export default function Albums() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [groupBeingDeleted, setGroupBeingDeleted] = useState(null);
   const [isLoadingDeleted, setIsLoadingDeleted] = useState(false);
-  const [selectedFile, setSelectedFile] = useState('');
 
-  const teste = false;
-  //   const loadGroups = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const { data } = await GroupService.listGroups();
-  //       setHasError(false);
-  //       setGroups(data);
-  //     } catch {
-  //       setHasError(true);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+  const loadAlbuns = async () => {
+    try {
+      // setIsLoading(true);
+      const { data } = await AlbumService.listAlbuns();
+      // setHasError(false);
+      setAlbuns(data);
+    } catch {
+      // setHasError(true);
+    } finally {
+      // setIsLoading(false);
+    }
+  };
 
-  //   useEffect(() => {
-  //     loadGroups();
-  //   }, []);
+  useEffect(() => {
+    loadAlbuns();
+  }, []);
 
-  const filteredGroups = useMemo(() => groups.filter((group) => (
-    group.nome.toLowerCase().includes(searchTerm.toLowerCase())
-  )), [groups, searchTerm]);
+  const filteredAlbuns = useMemo(() => albuns.filter((album) => (
+    album?.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+  )), [albuns, searchTerm]);
 
   const itensPerPage = 15;
-  const pages = Math.ceil(filteredGroups.length / itensPerPage);
+  const pages = Math.ceil(filteredAlbuns.length / itensPerPage);
   const startItens = currentPage * itensPerPage;
   const endIndex = startItens + itensPerPage;
-  const currentGroups = filteredGroups.slice(startItens, endIndex);
+  const currentAlbuns = filteredAlbuns.slice(startItens, endIndex);
 
   const handleChangeSearchTerm = (e) => {
     setSearchTerm(e.target.value);
   };
 
   //   const handleTryAgain = () => {
-  //     loadGroups();
+  //     loadAlbuns();
   //   };
 
-  const handleDeleteGroup = (group) => {
+  const handleDeleteAlbum = (group) => {
     setGroupBeingDeleted(group);
     setIsDeleteModalVisible(true);
   };
@@ -88,19 +83,19 @@ export default function Albums() {
       setIsLoadingDeleted(true);
       await GroupService.deleteGroup(groupBeingDeleted?.id);
 
-      setGroups((prevState) => prevState.filter(
-        (group) => group.id !== groupBeingDeleted.id,
+      setAlbuns((prevState) => prevState.filter(
+        (album) => album.id !== groupBeingDeleted.id,
       ));
 
       handleCloseDeleteModal();
       toast({
         type: 'success',
-        text: 'Grupo deletado com sucesso!',
+        text: 'Álbum deletado com sucesso!',
       });
     } catch {
       toast({
         type: 'danger',
-        text: 'Ocorreu um erro ao deletar o grupo!',
+        text: 'Ocorreu um erro ao deletar o álbum!',
       });
     } finally {
       setIsLoadingDeleted(false);
@@ -126,24 +121,12 @@ export default function Albums() {
         <p>Esta ação não poderá ser desfeita!</p>
       </Modal>
 
-      <Modal
-        visible={teste}
-        title="Adicione uma foto ao álbum ”Dia das crianças”"
-        cancelLabel="Cancelar"
-        confirmLabel="Confirmar"
-        // onCancel={handleCloseDeleteModal}
-        // onConfirm={handleConfirmDeleteGroup}
-        // loading={isLoadingDeleted}
-      >
-        <FileInput image={selectedFile} setImage={setSelectedFile} />
-      </Modal>
-
-      {groups.length > 0 && (
+      {albuns.length > 0 && (
       <Search>
         <InputSearch
           value={searchTerm}
           change={handleChangeSearchTerm}
-          place="Pesquisar grupo pelo nome..."
+          place="Pesquisar álbum pela descrição..."
         />
       </Search>
       )}
@@ -151,13 +134,12 @@ export default function Albums() {
       <Content>
         <HeaderContent
         //   hasError={hasError}
-          filteredArray={filteredGroups}
-          array={groups}
+          filteredArray={filteredAlbuns}
+          array={albuns}
           textSing=" álbum"
           textPlu=" álbuns"
           textButtom="Novo álbum"
           to="/adm/albuns/new"
-          print={() => gruposPDF(groups)}
         />
 
         {/* {hasError && (
@@ -174,11 +156,11 @@ export default function Albums() {
             <EmptyList term="Nenhum grupo foi cadastrado" />
           )} */}
 
-          {/* {(groups.length > 0 && filteredGroups.length < 1) && (
+          {/* {(groups.length > 0 && filteredAlbuns.length < 1) && (
             <SearchNotFound term={searchTerm} />
           )} */}
 
-          {filteredGroups.length > 0 && (
+          {filteredAlbuns.length > 0 && (
           <TableContent>
             <Pagination
               pages={pages}
@@ -194,17 +176,17 @@ export default function Albums() {
                 </tr>
               </thead>
               <tbody>
-                {currentGroups.map((group) => (
-                  <tr key={group.id}>
-                    <td data-title="Nome">{group.nome}</td>
+                {currentAlbuns.map((dataAlbum) => (
+                  <tr key={dataAlbum.id}>
+                    <td data-title="Nome">{dataAlbum.descricao}</td>
                     <td data-title="Ações">
-                      <Link to={`/adm/albuns/edit/${group.id}`}>
+                      <Link to={`/adm/albuns/edit/${dataAlbum.id}`}>
                         <FaEdit className="edit" />
                       </Link>
 
                       <FaTrash
                         className="remove"
-                        onClick={() => handleDeleteGroup(group)}
+                        onClick={() => handleDeleteAlbum(dataAlbum)}
                       />
                     </td>
                   </tr>

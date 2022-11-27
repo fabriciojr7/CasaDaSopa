@@ -40,6 +40,8 @@ import NewGroups from './pages/pagesPrivate/NewGroups';
 
 import { AuthContext, AuthProvider } from './context/auth';
 import Albums from './pages/pagesPrivate/Albums';
+import EditAlbum from './pages/pagesPrivate/EditAlbum';
+import NewAlbum from './pages/pagesPrivate/NewAlbum';
 
 function PrivateRoute({ children }) {
   const { authenticated, loading } = useContext(AuthContext);
@@ -156,6 +158,23 @@ function MainRoutes() {
               element={(
                 <PrivateRoute>
                   <Albums />
+                </PrivateRoute>
+                        )}
+            />
+
+            <Route
+              path="albuns/new"
+              element={(
+                <PrivateRoute>
+                  <NewAlbum />
+                </PrivateRoute>
+                        )}
+            />
+            <Route
+              path="albuns/edit/:id"
+              element={(
+                <PrivateRoute>
+                  <EditAlbum />
                 </PrivateRoute>
                         )}
             />

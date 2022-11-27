@@ -14,16 +14,18 @@ export default function NewFamilyDonation() {
 
   const handleSubmit = async (formData) => {
     try {
-      await FamilyDonationService.createDonation({
-        descricao: formData.descricao,
-        entidadeId: 1,
-        nome: formData.nome,
-        responsavelId: formData.responsavelId,
-        titulo: formData.titulo,
-      });
+      await FamilyDonationService.createDonation(formData);
+      //     {
+      //     descricao: formData.descricao,
+      //     entidadeId: 1,
+      //     nome: formData.nome,
+      //     responsavelId: formData.responsavelId,
+      //     titulo: formData.titulo,
+      //   }
+
       toast({
         type: 'success',
-        text: 'oação criada com sucesso!',
+        text: 'Doação criada com sucesso!',
         duration: 3000,
       });
       navigate('/adm/familias/doacoes');
