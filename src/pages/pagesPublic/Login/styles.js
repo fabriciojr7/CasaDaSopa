@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import iconLogin from '../../../assets/images/iconLogin.png';
 
 export const Container = styled.div`
     width: 100%;
@@ -38,10 +37,9 @@ export const Content = styled.div`
 export const ImageLogin = styled.div`
     width: 100%;
     height: 150px;
-    background-image: url(${iconLogin});
-    background-size: cover;
-    background-position: center;
-    position: relative;
+    img{
+        width: 150px;
+    }
 `;
 
 export const Areabtn = styled.div`

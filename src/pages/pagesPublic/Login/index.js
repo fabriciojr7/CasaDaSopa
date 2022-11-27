@@ -7,6 +7,8 @@ import Input from '../../../components/Input';
 import { AuthContext } from '../../../context/auth';
 import toast from '../../../utils/toast';
 
+import iconLogin from '../../../assets/images/iconLogin.png';
+
 import {
   Areabtn, Container, Content, ImageLogin,
 } from './styles';
@@ -58,7 +60,9 @@ export default function Login() {
   return (
     <Container>
       <Content>
-        <ImageLogin />
+        <ImageLogin>
+          <img src={iconLogin} alt="Imagem login" />
+        </ImageLogin>
         <h1>Login</h1>
 
         <form onSubmit={handleSubmit} noValidate>
