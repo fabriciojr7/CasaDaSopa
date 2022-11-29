@@ -18,6 +18,7 @@ export default function AddressForm({
   const [numero, setNumero] = useState(endereco?.numero);
   const [bairro, setBairro] = useState(endereco?.bairro);
   const [complemento, setComplemento] = useState(endereco?.complemento);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -114,6 +115,8 @@ export default function AddressForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsSubmitting(true);
+
     const dataEnd = {
       cep,
       estado,
@@ -125,7 +128,9 @@ export default function AddressForm({
       responsavelId: idResp,
     };
 
-    onSubmit(dataEnd);
+    onSubmit(dataEnd).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -137,6 +142,7 @@ export default function AddressForm({
           value={cep}
           change={handleCepChange}
           max={9}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -147,6 +153,7 @@ export default function AddressForm({
           value={rua}
           change={handleRuaChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -157,6 +164,7 @@ export default function AddressForm({
           value={bairro}
           change={handleBairroChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -167,6 +175,7 @@ export default function AddressForm({
           value={numero}
           change={handleNumeroChange}
           max={20}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -176,6 +185,7 @@ export default function AddressForm({
           value={complemento}
           change={(e) => setComplemento(e.target.value)}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -186,6 +196,7 @@ export default function AddressForm({
           value={cidade}
           change={handleCidadeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -196,11 +207,18 @@ export default function AddressForm({
           value={estado}
           change={handleEstadoChange}
           max={30}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

@@ -21,6 +21,7 @@ export default function EntitiesForm({
   const [telefone, setTelefone] = useState(entity?.telefone);
   const [email, setEmail] = useState(entity?.email);
   const [endereco, setEndereco] = useState(entity?.endereco);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -125,6 +126,9 @@ export default function EntitiesForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
+
     const dataEntities = {
       nomeFantasia: nome,
       razaoSocial: razao,
@@ -134,7 +138,9 @@ export default function EntitiesForm({
       endereco,
     };
 
-    onSubmit(dataEntities);
+    onSubmit(dataEntities).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -146,6 +152,7 @@ export default function EntitiesForm({
           value={nome}
           change={handleNomeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -156,6 +163,7 @@ export default function EntitiesForm({
           value={razao}
           change={handleRazaoChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -166,6 +174,7 @@ export default function EntitiesForm({
           value={cnpj}
           change={handleCnpjChange}
           max={18}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -176,6 +185,7 @@ export default function EntitiesForm({
           value={telefone}
           change={handleTelefoneChange}
           max={14}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -186,6 +196,7 @@ export default function EntitiesForm({
           value={email}
           change={handleEmailChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -196,11 +207,18 @@ export default function EntitiesForm({
           value={endereco}
           change={handleEnderecoChange}
           max={120}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

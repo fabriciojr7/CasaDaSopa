@@ -17,6 +17,7 @@ export const TabContainer = styled.div`
 export const TabProdHead = styled.div`
     display: flex;
     width: 100%;
+    max-width: 800px;
     align-items: center;
     justify-content: space-around;
     background: ${({ theme }) => theme.colors.gray[100]};

@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,21 +8,21 @@ import Loader from '../../../components/Loader';
 
 import FamilyDonationService from '../../../services/FamilyDonationService';
 import toast from '../../../utils/toast';
-import FamilyRequestForm from '../components/FamilyRequestForm';
+import FamilyDonationForm from '../components/FamilyDonationForm';
 import HeaderForm from '../components/HeaderForm';
 import { Container } from './styles';
 
 export default function EditFamilyDonation() {
   const { id } = useParams();
-  const [familyRequest, setFamilyRequest] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const formRef = useRef(null);
 
   useEffect(() => {
     async function getDataRequestFamily() {
       try {
         const { data } = await FamilyDonationService.getDonation(id);
 
-        setFamilyRequest(data);
+        formRef.current.setFieldsValues(data);
         setIsLoading(false);
       } catch {
         toast({
@@ -57,10 +58,9 @@ export default function EditFamilyDonation() {
       <HeaderForm title="Editar doação" to="/adm/familias/doacoes" />
       <Loader isLoading={isLoading} />
 
-      <FamilyRequestForm
-        key={familyRequest.id}
+      <FamilyDonationForm
+        ref={formRef}
         onSubmit={handleSubmit}
-        familyRequest={familyRequest}
       />
 
     </Container>

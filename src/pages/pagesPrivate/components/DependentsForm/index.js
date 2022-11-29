@@ -21,6 +21,7 @@ export default function DependentsForm({
   const [sexo, setSexo] = useState(dependent?.sexo);
   const [outrasInformacoes, setOutrasInformacoes] = useState(dependent?.outras_informacoes);
   const [nascimento, setNascimento] = useState(dependent?.data_nasc);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -94,6 +95,8 @@ export default function DependentsForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsSubmitting(true);
+
     const dataDepend = {
       responsavelId: idFamily,
       nomeCompleto: nome,
@@ -104,7 +107,9 @@ export default function DependentsForm({
       entidadeId: 1,
     };
 
-    onSubmit(dataDepend);
+    onSubmit(dataDepend).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -117,6 +122,7 @@ export default function DependentsForm({
           value={nome}
           change={handleNomeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -127,6 +133,7 @@ export default function DependentsForm({
           value={cpf}
           change={handleCpfChange}
           max={14}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -137,6 +144,7 @@ export default function DependentsForm({
           value={nascimento}
           change={handleNascimentoChange}
           max={10}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -146,6 +154,7 @@ export default function DependentsForm({
           label="Gênero *"
           value={sexo}
           change={handleSexoChange}
+          disabled={isSubmitting}
         >
           <option value="">Informe o seu gênero</option>
           <option value="F">Feminino</option>
@@ -160,11 +169,18 @@ export default function DependentsForm({
           value={outrasInformacoes}
           change={(e) => setOutrasInformacoes(e.target.value)}
           max={240}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

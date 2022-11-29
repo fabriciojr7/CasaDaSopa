@@ -68,7 +68,7 @@ export default function Donations() {
                 onClick={() => handleRequest(request)}
               >
                 <div className="card-header">
-                  <strong>{request.titulo}</strong>
+                  <strong>{request.categorias.descricao}</strong>
                   <MdOpenInNew />
                 </div>
                 <div className="card-description">

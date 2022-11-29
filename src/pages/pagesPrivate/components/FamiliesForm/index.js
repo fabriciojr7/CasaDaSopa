@@ -22,6 +22,7 @@ export default function FamiliesForm({
   const [renda, setRenda] = useState(responsavel?.renda);
   const [sexo, setSexo] = useState(responsavel?.sexo);
   const [outrasInformacoes, setOutrasInformacoes] = useState(responsavel?.outrasInformacoes);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -115,6 +116,8 @@ export default function FamiliesForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsSubmitting(true);
+
     const dataFamilies = {
       nomeCompleto: nome,
       cpf,
@@ -125,7 +128,9 @@ export default function FamiliesForm({
       outrasInformacoes,
       entidadeId: 1,
     };
-    onSubmit(dataFamilies);
+    onSubmit(dataFamilies).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -137,6 +142,7 @@ export default function FamiliesForm({
           value={nome}
           change={handleNomeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -147,6 +153,7 @@ export default function FamiliesForm({
           value={cpf}
           change={handleCpfChange}
           max={14}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -157,6 +164,7 @@ export default function FamiliesForm({
           max={14}
           value={telefone}
           change={handlePhoneChange}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -167,6 +175,7 @@ export default function FamiliesForm({
           value={nascimento}
           change={handleNascimentoChange}
           max={10}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -176,6 +185,7 @@ export default function FamiliesForm({
           label="Informe a renda da casa *"
           value={renda}
           change={handleRendaChange}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -185,6 +195,7 @@ export default function FamiliesForm({
           label="Gênero *"
           value={sexo}
           change={handleSexoChange}
+          disabled={isSubmitting}
         >
           <option value="">Informe o seu gênero</option>
           <option value="F">Feminino</option>
@@ -199,11 +210,18 @@ export default function FamiliesForm({
           value={outrasInformacoes}
           change={(e) => setOutrasInformacoes(e.target.value)}
           max={240}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

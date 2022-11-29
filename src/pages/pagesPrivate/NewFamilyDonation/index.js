@@ -4,7 +4,7 @@ import HeaderForm from '../components/HeaderForm';
 
 import FamilyDonationService from '../../../services/FamilyDonationService';
 import toast from '../../../utils/toast';
-import FamilyRequestForm from '../components/FamilyRequestForm';
+import FamilyDonationForm from '../components/FamilyDonationForm';
 import {
   Container,
 } from './styles';
@@ -42,7 +42,7 @@ export default function NewFamilyDonation() {
     <Container>
       <HeaderForm title="Gerar doação" to="/adm/familias/doacoes" />
 
-      <FamilyRequestForm onSubmit={handleSubmit} />
+      <FamilyDonationForm onSubmit={handleSubmit} />
 
     </Container>
   );

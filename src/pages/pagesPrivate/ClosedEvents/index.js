@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../../../components/Loader';
 import Pagination from '../../../components/Pagination';
 import EventService from '../../../services/EventService';
+import dateFormated from '../../../utils/dateFormated';
+import EmptyList from '../components/EmptyList';
 import ErrorContainer from '../components/ErrorContainer';
 import HeaderContent from '../components/HeaderContent';
 import HeaderPage from '../components/HeaderPage';
 import InputSearch from '../components/InputSearch';
+import SearchNotFound from '../components/SearchNotFound';
 import Table from '../components/Table';
 
 import { Container, Content, Search } from './styles';
@@ -60,6 +63,7 @@ export default function ClosedEvents() {
       <HeaderPage title="Eventos encerrados" />
       <Loader isLoading={isloading} />
 
+      {events.length > 0 && (
       <Search>
         <InputSearch
           value={searchTerm}
@@ -67,6 +71,7 @@ export default function ClosedEvents() {
           place="Pesquisar evento pela descrição..."
         />
       </Search>
+      )}
 
       <Content>
         <HeaderContent
@@ -84,30 +89,42 @@ export default function ClosedEvents() {
         />
         )}
 
-        {!isloading && (
+        {!hasError && (
         <>
-          <Pagination
-            pages={pages}
-            setCurrentPage={setCurrentPage}
-            currentPage={currentPage}
-          />
+          {(events.length < 1 && !isloading) && (
+          <EmptyList term="Nenhum evento encerrado foi encontrado" visbleStrong />
+          )}
 
-          <Table>
-            <thead>
-              <tr>
-                <th>Descrição do evento</th>
-                <th>Data</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentEvents.map((evento) => (
-                <tr key={evento.id} onClick={() => handleViewEvent(evento.id)}>
-                  <td data-title="Descrição">{evento.descricao}</td>
-                  <td data-title="Data">25/10/2022</td>
+          {(events.length > 0 && filteredEvents.length < 1) && (
+          <SearchNotFound term={searchTerm} />
+          )}
+
+          {filteredEvents.length > 0 && (
+          <>
+            <Pagination
+              pages={pages}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
+
+            <Table>
+              <thead>
+                <tr>
+                  <th>Descrição do evento</th>
+                  <th>Data</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {currentEvents.map((evento) => (
+                  <tr key={evento.id} onClick={() => handleViewEvent(evento.id)}>
+                    <td data-title="Descrição">{evento.descricao}</td>
+                    <td data-title="Data">{dateFormated(evento.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </>
+          )}
         </>
         )}
 

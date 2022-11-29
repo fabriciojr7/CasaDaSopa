@@ -15,6 +15,7 @@ export default function DonationCategoryForm({
 }) {
   const [descricao, setDescricao] = useState(category?.descricao);
   const [email, setEmail] = useState(category?.email);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -60,12 +61,16 @@ export default function DonationCategoryForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsSubmitting(true);
+
     const dataCategories = {
       descricao,
-      //   email,
+      email,
     };
 
-    onSubmit(dataCategories);
+    onSubmit(dataCategories).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -77,6 +82,7 @@ export default function DonationCategoryForm({
           value={descricao}
           change={handleDescricaoChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -87,11 +93,18 @@ export default function DonationCategoryForm({
           value={email}
           change={handleEmailChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

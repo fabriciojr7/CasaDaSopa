@@ -1,9 +1,10 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Container,
 } from './styles';
 
 export default function Select({
-  children, label, error, value, change, max,
+  children, label, error, value, change, disabled,
 }) {
   return (
     <Container error={error}>
@@ -12,11 +13,11 @@ export default function Select({
         placeholder=" "
         value={value}
         onChange={change}
-        maxLength={max}
+        disabled={disabled}
       >
         {children}
       </select>
-      { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+
       <label>
         {label}
       </label>

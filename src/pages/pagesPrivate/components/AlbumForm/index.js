@@ -40,10 +40,6 @@ export default function AlbumForm({
     e.preventDefault();
 
     setIsSubmitting(true);
-    // const dataAlbum = {
-    //   descricao,
-    //   visivel,
-    // };
 
     onSubmit({
       descricao,
@@ -65,11 +61,12 @@ export default function AlbumForm({
           disabled={isSubmitting}
         />
       </FormGrouping>
-      <FormGrouping error={getErrorsMEssageByFieldName('descricao')}>
+      <FormGrouping>
         <Select
           label="Visivel no site"
           value={visivel}
           change={(e) => setVisivel(e.target.value)}
+          disabled={isSubmitting}
         >
           <option value>Sim</option>
           <option value={false}>Não</option>

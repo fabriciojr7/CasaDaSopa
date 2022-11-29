@@ -32,7 +32,7 @@ export default function Donation() {
     const loadResquest = async () => {
       try {
         const { data } = await FamilyRequestService.getDonation(id);
-        setFamilyRequest(data);
+        setFamilyRequest(data[0]);
       } catch {
         //
       }
@@ -76,7 +76,7 @@ export default function Donation() {
 
       <TitleSection
         title="Contribue com a doação:"
-        subtitle={familyRequest?.titulo}
+        subtitle={familyRequest?.categorias?.descricao}
       />
 
       <Text>

@@ -20,6 +20,7 @@ export default function ContributorsForm({
   const [cpf, setCpf] = useState(contributor?.cpf);
   const [telefone, setTelefone] = useState(contributor?.telefone);
   const [email, setEmail] = useState(contributor?.email);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -109,6 +110,7 @@ export default function ContributorsForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const dataContributors = {
       nome,
@@ -119,7 +121,9 @@ export default function ContributorsForm({
       entidadeId: 1,
     };
 
-    onSubmit(dataContributors);
+    onSubmit(dataContributors).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -131,6 +135,7 @@ export default function ContributorsForm({
           value={nome}
           change={handleNomeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -141,6 +146,7 @@ export default function ContributorsForm({
           value={sobrenome}
           change={handleSobrenomeChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -151,6 +157,7 @@ export default function ContributorsForm({
           value={cpf}
           change={handleCpfChange}
           max={14}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -161,6 +168,7 @@ export default function ContributorsForm({
           max={14}
           value={telefone}
           change={handlePhoneChange}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
@@ -171,11 +179,18 @@ export default function ContributorsForm({
           value={email}
           change={handleEmailChange}
           max={60}
+          disabled={isSubmitting}
         />
       </FormGrouping>
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>{buttonLabel}</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          {buttonLabel}
+        </Button>
       </ButtonContainer>
     </Form>
   );

@@ -157,17 +157,6 @@ export default function EventInProgress() {
             max={40}
           />
         </FormGrouping>
-
-        <br /><p>Informe o horário do evento (ex: 12 horas)</p><br />
-
-        <FormGrouping>
-          <Input
-        //   error={getErrorsMEssageByFieldName('nome')}
-            value={horario}
-            change={(e) => setHorario(e.target.value)}
-            max={20}
-          />
-        </FormGrouping>
       </Modal>
 
       <Modal

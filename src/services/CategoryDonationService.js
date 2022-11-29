@@ -9,14 +9,6 @@ class CategoryDonationService {
     return this.httpClient.get('/categoria');
   }
 
-  //   listFamilyDonation(idFamily) {
-  //     return this.httpClient.get(`/solicitacoesPorResponsavel/${idFamily}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem('token')}`,
-  //       },
-  //     });
-  //   }
-
   getCategory(id) {
     return this.httpClient.get(`/categoria/${id}`);
   }

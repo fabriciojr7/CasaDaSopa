@@ -65,6 +65,12 @@ export const Tab = styled.div`
         border-radius: 8px;
         transform: scale(1.1);
     }
+
+    @media only screen and (max-width: 575px){
+        h4{
+            font-size: 16px;
+        }
+    }
 `;
 
 export const TabProdBody = styled.div`

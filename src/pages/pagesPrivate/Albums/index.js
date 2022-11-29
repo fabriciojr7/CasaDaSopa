@@ -8,15 +8,15 @@ import {
   Container, Content, Search, TableContent,
 } from './styles';
 
-// import Loader from '../../../components/Loader';
+import Loader from '../../../components/Loader';
 import Pagination from '../../../components/Pagination';
 import GroupService from '../../../services/GroupService';
-// import EmptyList from '../components/EmptyList';
-// import ErrorContainer from '../components/ErrorContainer';
+import EmptyList from '../components/EmptyList';
+import ErrorContainer from '../components/ErrorContainer';
 import HeaderContent from '../components/HeaderContent';
 import HeaderPage from '../components/HeaderPage';
 import InputSearch from '../components/InputSearch';
-// import SearchNotFound from '../components/SearchNotFound';
+import SearchNotFound from '../components/SearchNotFound';
 import Table from '../components/Table';
 import Modal from '../../../components/Modal';
 import toast from '../../../utils/toast';
@@ -26,8 +26,8 @@ import AlbumService from '../../../services/AlbumService';
 export default function Albums() {
   const [albuns, setAlbuns] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  //   const [isLoading, setIsLoading] = useState(true);
-  //   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [groupBeingDeleted, setGroupBeingDeleted] = useState(null);
@@ -35,14 +35,14 @@ export default function Albums() {
 
   const loadAlbuns = async () => {
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const { data } = await AlbumService.listAlbunsAll();
-      // setHasError(false);
+      setHasError(false);
       setAlbuns(data);
     } catch {
-      // setHasError(true);
+      setHasError(true);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -64,9 +64,9 @@ export default function Albums() {
     setSearchTerm(e.target.value);
   };
 
-  //   const handleTryAgain = () => {
-  //     loadAlbuns();
-  //   };
+  const handleTryAgain = () => {
+    loadAlbuns();
+  };
 
   const handleDeleteAlbum = (group) => {
     setGroupBeingDeleted(group);
@@ -78,7 +78,7 @@ export default function Albums() {
     setGroupBeingDeleted(null);
   };
 
-  const handleConfirmDeleteGroup = async () => {
+  const handleConfirmDeleteAlbum = async () => {
     try {
       setIsLoadingDeleted(true);
       await GroupService.deleteGroup(groupBeingDeleted?.id);
@@ -106,7 +106,7 @@ export default function Albums() {
     <Container>
       <HeaderPage title="Álbuns" />
 
-      {/* <Loader isLoading={isLoading} /> */}
+      <Loader isLoading={isLoading} />
 
       <Modal
         danger
@@ -115,7 +115,7 @@ export default function Albums() {
         cancelLabel="Cancelar"
         confirmLabel="Deletar"
         onCancel={handleCloseDeleteModal}
-        onConfirm={handleConfirmDeleteGroup}
+        onConfirm={handleConfirmDeleteAlbum}
         loading={isLoadingDeleted}
       >
         <p>Esta ação não poderá ser desfeita!</p>
@@ -133,7 +133,7 @@ export default function Albums() {
 
       <Content>
         <HeaderContent
-        //   hasError={hasError}
+          hasError={hasError}
           filteredArray={filteredAlbuns}
           array={albuns}
           textSing=" álbum"
@@ -142,23 +142,23 @@ export default function Albums() {
           to="/adm/albuns/new"
         />
 
-        {/* {hasError && (
+        {hasError && (
         <ErrorContainer
-          msgErro=" Ocorreu um erro ao obter a lista de grupos"
+          msgErro=" Ocorreu um erro ao obter a lista de álbuns"
           click={handleTryAgain}
         />
 
-        )} */}
+        )}
 
-        {/* {!hasError && ( */}
+        {!hasError && (
         <>
-          {/* {(groups.length < 1 && !isLoading) && (
-            <EmptyList term="Nenhum grupo foi cadastrado" />
-          )} */}
+          {(albuns.length < 1 && !isLoading) && (
+            <EmptyList term="Nenhum álbum foi cadastrado" />
+          )}
 
-          {/* {(groups.length > 0 && filteredAlbuns.length < 1) && (
+          {(albuns.length > 0 && filteredAlbuns.length < 1) && (
             <SearchNotFound term={searchTerm} />
-          )} */}
+          )}
 
           {filteredAlbuns.length > 0 && (
           <TableContent>
@@ -196,7 +196,7 @@ export default function Albums() {
           </TableContent>
           )}
         </>
-        {/* )} */}
+        )}
 
       </Content>
     </Container>

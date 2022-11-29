@@ -34,6 +34,7 @@ export default function FamilyDonations() {
     try {
       setIsLoading(true);
       const { data } = await FamilyDonationService.listFamilyDonation(responsavel.id);
+
       setHasError(false);
       setFamiliesRequest(data);
     } catch {
@@ -154,7 +155,7 @@ export default function FamilyDonations() {
               onClick={() => toggleTab(2)}
               className={toggle === 2 ? 'right active' : 'right'}
             >
-              <h4>Em progresso</h4>
+              <h4>Progresso</h4>
             </Tab>
 
             <Tab
@@ -171,7 +172,7 @@ export default function FamilyDonations() {
                 <Table>
                   <thead>
                     <tr>
-                      <th>Título</th>
+                      <th>Categoria</th>
                       <th>Status</th>
                       <th>Ações</th>
                     </tr>
@@ -182,7 +183,7 @@ export default function FamilyDonations() {
                           <tr
                             key={familyRequest.id}
                           >
-                            <td data-title="Título">{familyRequest.titulo}</td>
+                            <td data-title="Categoria">{familyRequest.categorias.descricao}</td>
                             <td data-title="Status">
                               {familyRequest.status}
                             </td>
@@ -215,7 +216,7 @@ export default function FamilyDonations() {
                 <Table>
                   <thead>
                     <tr>
-                      <th>Título</th>
+                      <th>Categoria</th>
                       <th>Status</th>
                       <th>Ações</th>
                     </tr>
@@ -224,7 +225,7 @@ export default function FamilyDonations() {
                     {
                         requestsProgress().map((familyRequest) => (
                           <tr key={familyRequest.id}>
-                            <td data-title="Título">{familyRequest.titulo}</td>
+                            <td data-title="Categoria">{familyRequest.categorias.descricao}</td>
                             <td data-title="Status">{familyRequest.status}</td>
                             <td data-title="Ações">
 
@@ -255,7 +256,7 @@ export default function FamilyDonations() {
                 <Table>
                   <thead>
                     <tr>
-                      <th>Título</th>
+                      <th>Categoria</th>
                       <th>Status</th>
                       <th>Ações</th>
                     </tr>
@@ -264,7 +265,7 @@ export default function FamilyDonations() {
                     {
                         requestsCompleted().map((familyRequest) => (
                           <tr key={familyRequest.id}>
-                            <td data-title="Título">{familyRequest.titulo}</td>
+                            <td data-title="Categoria">{familyRequest.categorias.descricao}</td>
                             <td data-title="Status">{familyRequest.status}</td>
                             <td data-title="Ações">
 

@@ -1,12 +1,12 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import {
   useEffect,
   useState,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 
 import Button from '../../../../components/Button';
 import FormGrouping from '../../../../components/FormGrouping';
-// import Input from '../../../../components/Input';
 import Select from '../../../../components/Select';
 import TextArea from '../../../../components/TextArea';
 import useErrors from '../../../../hooks/useErrors';
@@ -14,13 +14,13 @@ import CategoryDonationService from '../../../../services/CategoryDonationServic
 
 import { Form, ButtonContainer } from './styles';
 
-export default function FamilyRequestForm({ onSubmit, familyRequest }) {
+const FamilyDonationForm = forwardRef(({ onSubmit }, ref) => {
   const [responsavel] = useState(JSON.parse(localStorage.getItem('responsavel')));
-  const [categoriaId, setCategoriaId] = useState(familyRequest?.categoria_id);
+  const [categoriaId, setCategoriaId] = useState('');
   const [categories, setCategories] = useState([]);
-  //   const [titulo, setTitulo] = useState(familyRequest?.titulo);
-  const [descricao, setDescricao] = useState(familyRequest?.descricao);
-  const [status, setStatus] = useState(familyRequest?.status);
+  const [descricao, setDescricao] = useState('');
+  const [status, setStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     errors,
@@ -29,9 +29,17 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
     getErrorsMEssageByFieldName,
   } = useErrors();
 
-  const isFormInicial = (/* titulo && */ descricao);
+  const isFormInicial = (categoriaId && descricao);
 
   const isFormValid = (isFormInicial && errors.length === 0);
+
+  useImperativeHandle(ref, () => ({
+    setFieldsValues: (familyDonation) => {
+      setCategoriaId(familyDonation[0].categoria_id);
+      setDescricao(familyDonation[0].descricao);
+      setStatus(familyDonation[0].status);
+    },
+  }), []);
 
   useEffect(() => {
     async function loadCategories() {
@@ -41,20 +49,15 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
     loadCategories();
   }, []);
 
-  //   const handleTitleChange = (e) => {
-  //     setTitulo(e.target.value);
+  const handleCategoriaChange = (e) => {
+    setCategoriaId(e.target.value);
 
-  //     if (!e.target.value) {
-  //       setError({ field: 'titulo', message: 'O titúlo é obrigatório.' });
-  //     } else {
-  //       removeError('titulo');
-  //       if (e.target.value.length < 3) {
-  //         setError({ field: 'titulo-min', message: 'O titúlo tem pelo menos 3 caractéres.' });
-  //       } else {
-  //         removeError('titulo-min');
-  //       }
-  //     }
-  //   };
+    if (!e.target.value) {
+      setError({ field: 'categoria', message: 'A categoria é obrigatória.' });
+    } else {
+      removeError('categoria');
+    }
+  };
 
   const handleDescricaoChange = (e) => {
     setDescricao(e.target.value);
@@ -73,26 +76,28 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const dataSolicitacao = {
+    setIsSubmitting(true);
+    onSubmit({
       responsavelId: responsavel.id,
       categoriaId,
-      titulo: 'sfdsfs',
       descricao,
       nome: responsavel.nome,
       status,
       entidadeId: 1,
-    };
-    onSubmit(dataSolicitacao);
+    }).finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGrouping>
+      <FormGrouping error={getErrorsMEssageByFieldName('categoria')}>
         <Select
+          error={getErrorsMEssageByFieldName('categoria')}
           label="Categoria da doação *"
           value={categoriaId}
-          change={(e) => setCategoriaId(e.target.value)}
+          change={handleCategoriaChange}
+          disabled={isSubmitting || status === 'Solicitação Concluida'}
         >
           <option value="">Informe a categoria</option>
           {categories.map((category) => (
@@ -101,42 +106,43 @@ export default function FamilyRequestForm({ onSubmit, familyRequest }) {
         </Select>
       </FormGrouping>
 
-      {/* <FormGrouping error={getErrorsMEssageByFieldName('titulo') ||
-       getErrorsMEssageByFieldName('titulo-min')}>
-        <Input
-          error={getErrorsMEssageByFieldName('titulo') || getErrorsMEssageByFieldName('titulo-min')}
-          label="Titulo da solicitação *"
-          value={titulo}
-          change={handleTitleChange}
-        />
-      </FormGrouping> */}
-
       <FormGrouping error={getErrorsMEssageByFieldName('descricao') || getErrorsMEssageByFieldName('descricao-min')}>
         <TextArea
           error={getErrorsMEssageByFieldName('descricao') || getErrorsMEssageByFieldName('descricao-min')}
-          label="Descrição detalhada da solicitação"
+          label="Descrição sobre a doação"
           value={descricao}
           change={handleDescricaoChange}
+          disabled={isSubmitting || status === 'Solicitação Concluida'}
+          max={255}
         />
       </FormGrouping>
 
       {status && (
-        <FormGrouping>
-          <Select
-            label="Status"
-            value={status}
-            change={(e) => setStatus(e.target.value)}
-          >
-            <option value="Solicitação Aberta">Solicitação aberta</option>
-            <option value="Solicitação em Progresso">Solicitação em progresso</option>
-            <option value="Solicitação Concluida">Solicitação concluída</option>
-          </Select>
-        </FormGrouping>
+      <FormGrouping>
+        <Select
+          label="Status"
+          value={status}
+          change={(e) => setStatus(e.target.value)}
+          disabled={isSubmitting || status === 'Solicitação Concluida'}
+        >
+          <option value="Solicitação Aberta">Doação aberta</option>
+          <option value="Solicitação em Progresso">Doação em progresso</option>
+          <option value="Solicitação Concluida">Doação concluída</option>
+        </Select>
+      </FormGrouping>
       )}
 
       <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>Confirmar</Button>
+        <Button
+          type="submit"
+          disabled={!isFormValid}
+          isLoading={isSubmitting}
+        >
+          Confirmar
+        </Button>
       </ButtonContainer>
     </Form>
   );
-}
+});
+
+export default FamilyDonationForm;

@@ -3,20 +3,12 @@ import styled from 'styled-components';
 export const Container = styled.div`
     width: 100%;
     min-height: 100vh;
-`;
-
-export const Content = styled.div`
-    width: 100%;
-    margin-top: 16px;
-    border-top: 2px solid ${({ theme }) => theme.colors.gray[100]};
-    padding-top: 8px;
 
     .filter{
         display: flex;
         align-items: center;
         color: ${({ theme }) => theme.colors.gray[600]};
         font-weight: bold;
-        padding-bottom: 8px;
 
         p{
             margin-right: 8px;
@@ -28,6 +20,13 @@ export const Content = styled.div`
             color: aqua;
         }
     }
+`;
+
+export const Content = styled.div`
+    width: 100%;
+    margin-top: 16px;
+    border-top: 2px solid ${({ theme }) => theme.colors.gray[100]};
+    padding-top: 8px;
 `;
 
 export const Search = styled.div`

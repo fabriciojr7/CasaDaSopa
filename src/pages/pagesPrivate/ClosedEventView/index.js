@@ -2,15 +2,17 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../../components/Loader';
 import EventService from '../../../services/EventService';
+import dateFormated from '../../../utils/dateFormated';
 import toast from '../../../utils/toast';
 
 import HeaderForm from '../components/HeaderForm';
 import InputSearch from '../components/InputSearch';
+import SearchNotFound from '../components/SearchNotFound';
 import Table from '../components/Table';
 import { Container, Content, Search } from './styles';
 
 export default function ClosedEventView() {
-  const [event, setEvent] = useState({});
+  const [event, setEvent] = useState('');
   const [responsaveis, setResponsaveis] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,18 +33,18 @@ export default function ClosedEventView() {
         if (data.length === 0) {
           toast({
             type: 'danger',
-            text: 'Erro ao buscar dados do grupo!',
+            text: 'Erro ao buscar dados do evento!',
             duration: 5000,
           });
           navigate('/adm/eventosencerrados');
         }
-        setEvent(data[0]);
+        setEvent(`${data[0].descricao} - ${dateFormated(data[0].created_at)}`);
         setResponsaveis(data[0].responsaveis);
         setIsLoading(false);
       } catch {
         toast({
           type: 'danger',
-          text: 'Erro ao buscar dados do grupo!',
+          text: 'Erro ao buscar dados do evento!',
           duration: 5000,
         });
         navigate('/adm/eventosencerrados');
@@ -74,50 +76,52 @@ export default function ClosedEventView() {
 
   return (
     <Container>
-      <HeaderForm title={event?.descricao || 'Evento'} to="/adm/eventosencerrados" />
+      <HeaderForm title={event || 'Evento'} to="/adm/eventosencerrados" />
       <Loader isLoading={isLoading} />
 
+      <Search>
+        <InputSearch
+          value={searchTerm}
+          change={(e) => setSearchTerm(e.target.value)}
+          place="Pesquisar responsável pelo nome..."
+        />
+      </Search>
+
+      <div className="filter">
+        <p>Presenças: </p>
+        <input
+          type="radio"
+          value="todas"
+          name="presencas"
+          checked={isRadioSelected('todas')}
+          onChange={handleRadioClick}
+        />
+        Todas
+        <input
+          type="radio"
+          value="sim"
+          name="presencas"
+          checked={isRadioSelected('sim')}
+          onChange={handleRadioClick}
+        />
+        Confirmadas
+        <input
+          type="radio"
+          value="nao"
+          name="presencas"
+          checked={isRadioSelected('nao')}
+          onChange={handleRadioClick}
+        />
+        Não confirmadas
+      </div>
+
       <Content>
-        {responsaveis.length > 0 && (
-        <Search>
-          <InputSearch
-            value={searchTerm}
-            change={(e) => setSearchTerm(e.target.value)}
-            place="Pesquisar responsável pelo nome..."
-          />
-        </Search>
+
+        {(filteredResponsaveis.length < 1) && (
+        <SearchNotFound term={searchTerm} />
         )}
 
-        {!isLoading && (
-        <>
-          <div className="filter">
-            <p>Presenças: </p>
-            <input
-              type="radio"
-              value="todas"
-              name="presencas"
-              checked={isRadioSelected('todas')}
-              onChange={handleRadioClick}
-            />
-            Todas
-            <input
-              type="radio"
-              value="sim"
-              name="presencas"
-              checked={isRadioSelected('sim')}
-              onChange={handleRadioClick}
-            />
-            Confirmadas
-            <input
-              type="radio"
-              value="nao"
-              name="presencas"
-              checked={isRadioSelected('nao')}
-              onChange={handleRadioClick}
-            />
-            Não confirmadas
-          </div>
-
+        {filteredResponsaveis.length > 0 && (
           <Table>
             <thead>
               <tr>
@@ -141,8 +145,8 @@ export default function ClosedEventView() {
 
             </tbody>
           </Table>
-        </>
         )}
+
       </Content>
     </Container>
   );
