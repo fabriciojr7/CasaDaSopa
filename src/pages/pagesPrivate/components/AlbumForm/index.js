@@ -1,5 +1,7 @@
 import {
   useState,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 
 import useErrors from '../../../../hooks/useErrors';
@@ -11,11 +13,11 @@ import FormGrouping from '../../../../components/FormGrouping';
 import Input from '../../../../components/Input';
 import Select from '../../../../components/Select';
 
-export default function AlbumForm({
-  buttonLabel, onSubmit, album,
-}) {
-  const [descricao, setDescricao] = useState(album?.descricao);
-  const [visivel, setVisivel] = useState(album?.visivel);
+const AlbumForm = forwardRef(({
+  buttonLabel, onSubmit,
+}, ref) => {
+  const [descricao, setDescricao] = useState('');
+  const [visivel, setVisivel] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -26,6 +28,13 @@ export default function AlbumForm({
   } = useErrors();
 
   const isFormValid = (descricao && errors.length === 0);
+
+  useImperativeHandle(ref, () => ({
+    setFieldsValues: (album) => {
+      setDescricao(album.descricao);
+      setVisivel(album.visivel);
+    },
+  }), []);
 
   const handleDescricaoChange = (e) => {
     setDescricao(e.target.value);
@@ -84,4 +93,12 @@ export default function AlbumForm({
       </ButtonContainer>
     </Form>
   );
-}
+});
+
+export default AlbumForm;
+
+// export default function AlbumForm({
+//   buttonLabel, onSubmit, album,
+// }) {
+
+// }

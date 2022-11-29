@@ -20,7 +20,7 @@ export default function NewAlbum() {
     } catch {
       toast({
         type: 'danger',
-        text: 'Ocorreu um erro ao editar o álbum!',
+        text: 'Ocorreu um erro ao cadastrar o álbum!',
         duration: 5000,
       });
     }

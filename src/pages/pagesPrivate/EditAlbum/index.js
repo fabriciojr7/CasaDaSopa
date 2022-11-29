@@ -1,5 +1,5 @@
 /* eslint-disable import/no-duplicates */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AlbumService from '../../../services/AlbumService';
 import toast from '../../../utils/toast';
@@ -13,7 +13,7 @@ import Loader from '../../../components/Loader';
 import { Container, HeaderAlbumPhotos } from './styles';
 
 export default function EditAlbum() {
-  const [album, setAlbum] = useState({});
+  const [album, setAlbum] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAddPhoto, setIsLoadingAddPhoto] = useState(false);
   const [photos, setPhotos] = useState([]);
@@ -21,12 +21,14 @@ export default function EditAlbum() {
   const [selectedFile, setSelectedFile] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+  const formRef = useRef(null);
 
   useEffect(() => {
     const getEntity = async () => {
       try {
         const { data } = await AlbumService.getAlbum(id);
-        setAlbum(data[0]);
+        formRef.current.setFieldsValues(data[0]);
+        setAlbum(data[0].descricao);
         setPhotos(data[0].photos);
         setIsLoading(false);
       } catch {
@@ -105,7 +107,7 @@ export default function EditAlbum() {
       <Modal
         loading={isLoadingAddPhoto}
         visible={visibleModal}
-        title={`Adicione uma foto ao álbum ”${album.descricao}”`}
+        title={`Adicione uma foto ao álbum ”${album}”`}
         cancelLabel="Cancelar"
         confirmLabel="Confirmar"
         onCancel={toggleVisibleModal}
@@ -117,10 +119,9 @@ export default function EditAlbum() {
       <HeaderForm title="Edição de álbum" to="/adm/albuns" />
 
       <AlbumForm
-        key={album.id}
         buttonLabel="Salvar alterações"
         onSubmit={handleSubmit}
-        album={album}
+        ref={formRef}
       />
 
       <HeaderAlbumPhotos>
