@@ -6,36 +6,34 @@ import Loader from '../../../components/Loader';
 
 import groupImg from '../../../assets/images/grupo.jpg';
 import GroupService from '../../../services/GroupService';
-import ErrorContainer from '../../pagesPrivate/components/ErrorContainer';
+import RequestError from '../components/RequestError';
+import EmptyList from '../../pagesPrivate/components/EmptyList';
 
 export default function GroupPresentation() {
   const [groups, setGroups] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const loadGroups = async () => {
-    try {
-      setIsLoading(true);
-      const { data } = await GroupService.listGroups();
-      setGroups(data);
-    } catch {
-      setHasError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const loadGroups = async () => {
+      try {
+        setIsLoading(true);
+        const { data } = await GroupService.listGroups();
+
+        setGroups(data);
+      } catch {
+        setHasError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     loadGroups();
   }, []);
 
   const listColaboradores = (colaboradores) => {
     const nameColaboradores = colaboradores?.map((colaborador) => colaborador.nome);
     return nameColaboradores?.join(', ');
-  };
-
-  const handleTryAgain = () => {
-    loadGroups();
   };
 
   return (
@@ -47,14 +45,16 @@ export default function GroupPresentation() {
       />
 
       {hasError && (
-      <ErrorContainer
-        msgErro="Ocorreu um erro ao obter a lista de grupos"
-        click={handleTryAgain}
-      />
+      <RequestError />
       )}
 
       {!hasError && (
         <Container>
+
+          {(groups.length === 0) && !isLoading && (
+          <EmptyList term="Nenhum grupo cadastrado!" visbleStrong />
+          )}
+
           {groups.map((group) => (
             <Group key={group?.id}>
               <div className="group-information">

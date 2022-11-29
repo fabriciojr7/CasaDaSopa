@@ -8,6 +8,7 @@ import { Container } from './styles';
 export default function PhotosGalery({ photos, setPhotos }) {
   const [visibleModal, setVisibleModal] = useState(false);
   const [photoBeingDeleted, setPhotoBeingDeleted] = useState(null);
+  const [isLoadingDeleted, setIsLoadingDeleted] = useState(false);
 
   const toggleVisibleModal = () => {
     setVisibleModal((prevState) => !prevState);
@@ -25,14 +26,13 @@ export default function PhotosGalery({ photos, setPhotos }) {
 
   const handleConfirmDeleteContributor = async () => {
     try {
-    //   setIsLoadingDeleted(true);
+      setIsLoadingDeleted(true);
       await AlbumService.removePhotoAlbum(photoBeingDeleted?.id);
 
       setPhotos((prevState) => prevState.filter(
         (photo) => photo.id !== photoBeingDeleted.id,
       ));
 
-      handleCloseDeleteModal();
       toast({
         type: 'success',
         text: 'Foto deletada com sucesso!',
@@ -43,7 +43,8 @@ export default function PhotosGalery({ photos, setPhotos }) {
         text: 'Ocorreu um erro ao deletar a foto!',
       });
     } finally {
-    //   setIsLoadingDeleted(false);
+      setIsLoadingDeleted(false);
+      handleCloseDeleteModal();
     }
   };
 
@@ -57,8 +58,9 @@ export default function PhotosGalery({ photos, setPhotos }) {
         confirmLabel="Confirmar"
         onCancel={toggleVisibleModal}
         onConfirm={handleConfirmDeleteContributor}
+        loading={isLoadingDeleted}
       >
-        <p>Essa ação é irreversível! Mas você poderá adicona-lá novamente.</p>
+        <p>Essa ação é irreversível!</p>
       </Modal>
 
       <div className="container-img">

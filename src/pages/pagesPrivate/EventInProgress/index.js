@@ -29,7 +29,6 @@ export default function EventInProgress() {
   const [isModalEncerrarVisible, setIsModalEncerrarVisible] = useState(false);
   const [isModalConfirmPresenceVisible, setIsModalConfirmPresenceVisible] = useState(false);
   const [descricao, setDescricao] = useState('');
-  const [horario, setHorario] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
   const loadEventOpen = async () => {
@@ -57,7 +56,6 @@ export default function EventInProgress() {
   const handleToggleModalVisible = () => {
     setIsModalVisible((prevState) => !prevState);
     setDescricao('');
-    setHorario('');
   };
 
   const handleToggleModalEncerrarVisible = () => {
@@ -76,12 +74,19 @@ export default function EventInProgress() {
 
   const handleConfirmCreateEvent = async () => {
     try {
-      setIsLoadingOpening(true);
-      await EventService.createEvent({
-        descricao,
-        horario,
-      });
-      loadEventOpen();
+      if (descricao.trim()) {
+        setIsLoadingOpening(true);
+        await EventService.createEvent({
+          descricao,
+        });
+        loadEventOpen();
+      } else {
+        toast({
+          type: 'danger',
+          text: 'Não foi possível criar o evento sem a descrição!',
+          duration: 5000,
+        });
+      }
     } catch {
       toast({
         type: 'danger',
@@ -151,7 +156,6 @@ export default function EventInProgress() {
         <p>Informe uma descrição para o evento</p><br />
         <FormGrouping>
           <Input
-        //   error={getErrorsMEssageByFieldName('nome')}
             value={descricao}
             change={(e) => setDescricao(e.target.value)}
             max={40}

@@ -72,16 +72,22 @@ export default function EditAlbum() {
       formData.append('albumId', id);
       if (selectedFile) {
         formData.append('foto', selectedFile);
-      }
 
-      const { data } = await AlbumService.addPhotoAlbum(formData);
-      toast({
-        type: 'success',
-        text: 'Foto adicionada com sucesso!',
-        duration: 3000,
-      });
+        const { data } = await AlbumService.addPhotoAlbum(formData);
+        toast({
+          type: 'success',
+          text: 'Foto adicionada com sucesso!',
+          duration: 3000,
+        });
+        setPhotos([...photos, data]);
+      } else {
+        toast({
+          type: 'danger',
+          text: 'Nenhuma foto foi selecionara para ser inserida!',
+          duration: 500,
+        });
+      }
       toggleVisibleModal();
-      setPhotos([...photos, data]);
     } catch {
       toast({
         type: 'danger',

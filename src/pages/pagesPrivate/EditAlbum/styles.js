@@ -16,5 +16,4 @@ export const HeaderAlbumPhotos = styled.header`
         color: ${({ theme }) => theme.colors.gray[600]};
         margin-bottom: 16px;
     }
-    /* background: #ccc; */
 `;

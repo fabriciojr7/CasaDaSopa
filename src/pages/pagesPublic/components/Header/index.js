@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   List, ListMenu, Logo, NavContainer, StyledHeader,
 } from './styles';
@@ -9,6 +9,8 @@ import iconOpen from '../../../../assets/images/icons/openICmenu.svg';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
   function handleMenuToggleVisible() {
     setMenuOpen((prevState) => !prevState);
   }
@@ -65,10 +67,11 @@ export default function Header() {
         </List>
 
         <div className="login-buttom">
-          <button type="button">
-            <Link to="/login">
-              Painel
-            </Link>
+          <button
+            onClick={() => navigate('/login')}
+            type="button"
+          >
+            Painel
           </button>
         </div>
 
@@ -126,10 +129,11 @@ export default function Header() {
         </ul>
 
         <div className="login-buttom">
-          <button type="button">
-            <Link to="/login">
-              Painel
-            </Link>
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+          >
+            Painel
           </button>
         </div>
       </ListMenu>

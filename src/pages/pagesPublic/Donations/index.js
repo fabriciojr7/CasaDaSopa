@@ -14,11 +14,14 @@ import Loader from '../../../components/Loader';
 import FamilyDonationService from '../../../services/FamilyDonationService';
 import ContainerSection from '../components/ContainerSection';
 import Pagination from '../../../components/Pagination';
+import EmptyList from '../../pagesPrivate/components/EmptyList';
+import RequestError from '../components/RequestError';
 
 export default function Donations() {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
+  const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
 
   const itensPerPage = 10;
@@ -31,9 +34,10 @@ export default function Donations() {
     try {
       setIsLoading(true);
       const { data } = await FamilyDonationService.listDonations();
+
       setRequests(data);
     } catch {
-      //   setHasError(true);
+      setHasError(true);
     } finally {
       setIsLoading(false);
     }
@@ -60,25 +64,32 @@ export default function Donations() {
         subtitle="Escolha uma e ajude uma família"
       />
 
+      {hasError && (
+      <RequestError />
+      )}
+
+      {!hasError && (
       <Content>
-        {
-            requestsOpened().map((request) => (
-              <Card
-                key={request.id}
-                onClick={() => handleRequest(request)}
-              >
-                <div className="card-header">
-                  <strong>{request.categorias.descricao}</strong>
-                  <MdOpenInNew />
-                </div>
-                <div className="card-description">
-                  <p>
-                    {request.descricao}
-                  </p>
-                </div>
-              </Card>
-            ))
-        }
+        {(requests.length === 0) && !isLoading && (
+        <EmptyList term="Nenhuma doação foi cadastrada!" visbleStrong />
+        )}
+
+        {requestsOpened().map((request) => (
+          <Card
+            key={request.id}
+            onClick={() => handleRequest(request)}
+          >
+            <div className="card-header">
+              <strong>{request.categorias.descricao}</strong>
+              <MdOpenInNew />
+            </div>
+            <div className="card-description">
+              <p>
+                {request.descricao}
+              </p>
+            </div>
+          </Card>
+        ))}
 
         {requests.length > 10 && (
         <Pagination
@@ -87,8 +98,8 @@ export default function Donations() {
           currentPage={currentPage}
         />
         )}
-
       </Content>
+      )}
     </ContainerSection>
   );
 }

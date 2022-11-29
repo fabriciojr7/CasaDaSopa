@@ -48,4 +48,27 @@ export const Container = styled.div`
         }
 
     }
+
+
+    @media only screen and (max-width: 1150px){
+        .container-img{
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media only screen and (max-width: 650px){
+        .container-img{
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media only screen and (max-width: 420px){
+        .container-img{
+            grid-template-columns: repeat(1, 1fr);
+            .area-img{
+                width: 300px;
+                height: 200px;
+            }
+        }
+    }
 `;

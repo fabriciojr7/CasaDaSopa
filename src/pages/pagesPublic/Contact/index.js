@@ -12,6 +12,8 @@ import maps from '../../../assets/images/maps.jpeg';
 import MailService from '../../../services/MailService';
 
 import toast from '../../../utils/toast';
+import useErrors from '../../../hooks/useErrors';
+import isEmailValid from '../../../utils/isEmailValid';
 
 export default function Contact() {
   const [nome, setNome] = useState('');
@@ -19,6 +21,77 @@ export default function Contact() {
   const [assunto, setAssunto] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [isLoadingEmail, setIsLoadingEmail] = useState(false);
+
+  const {
+    errors,
+    setError,
+    removeError,
+    getErrorsMEssageByFieldName,
+  } = useErrors();
+
+  const isFormInicial = (nome && email && assunto && mensagem);
+
+  const isFormValid = (isFormInicial && errors.length === 0);
+
+  const handleNomeChange = (e) => {
+    setNome(e.target.value);
+
+    if (!e.target.value) {
+      setError({ field: 'nome', message: 'O nome é obrigatório.' });
+    } else {
+      removeError('nome');
+      if (e.target.value.length < 3) {
+        setError({ field: 'nome-min', message: 'O nome deve ter pelo menos 3 caracteres.' });
+      } else {
+        removeError('nome-min');
+      }
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+
+    if (!e.target.value) {
+      setError({ field: 'email', message: 'O email é obrigatório.' });
+    } else {
+      removeError('email');
+      if (!isEmailValid(e.target.value)) {
+        setError({ field: 'email-valid', message: 'Informe um e-mail válido.' });
+      } else {
+        removeError('email-valid');
+      }
+    }
+  };
+
+  const handleAssuntoChange = (e) => {
+    setAssunto(e.target.value);
+
+    if (!e.target.value) {
+      setError({ field: 'assunto', message: 'O assunto é obrigatório.' });
+    } else {
+      removeError('assunto');
+      if (e.target.value.length < 3) {
+        setError({ field: 'assunto-min', message: 'O assunto deve ter pelo menos 3 caracteres.' });
+      } else {
+        removeError('assunto-min');
+      }
+    }
+  };
+
+  const handleMensagemChange = (e) => {
+    setMensagem(e.target.value);
+
+    if (!e.target.value) {
+      setError({ field: 'mensagem', message: 'A mensagem é obrigatória.' });
+    } else {
+      removeError('mensagem');
+      if (e.target.value.length < 3) {
+        setError({ field: 'mensagem-min', message: 'A mensagem deve ter pelo menos 3 caracteres.' });
+      } else {
+        removeError('mensagem-min');
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,38 +132,42 @@ export default function Contact() {
         />
 
         <Form onSubmit={handleSubmit} noValidate>
-          <FormGrouping>
+          <FormGrouping error={getErrorsMEssageByFieldName('nome') || getErrorsMEssageByFieldName('nome-min')}>
             <Input
+              error={getErrorsMEssageByFieldName('nome') || getErrorsMEssageByFieldName('nome-min')}
               label="Informe seu nome *"
               value={nome}
-              change={(e) => setNome(e.target.value)}
+              change={handleNomeChange}
               disabled={isLoadingEmail}
             />
           </FormGrouping>
 
-          <FormGrouping>
+          <FormGrouping error={getErrorsMEssageByFieldName('email') || getErrorsMEssageByFieldName('email-valid')}>
             <Input
+              error={getErrorsMEssageByFieldName('email') || getErrorsMEssageByFieldName('email-valid')}
               label="Informe seu email *"
               value={email}
-              change={(e) => setEmail(e.target.value)}
+              change={handleEmailChange}
               disabled={isLoadingEmail}
             />
           </FormGrouping>
 
-          <FormGrouping>
+          <FormGrouping error={getErrorsMEssageByFieldName('assunto') || getErrorsMEssageByFieldName('assunto-min')}>
             <Input
+              error={getErrorsMEssageByFieldName('assunto') || getErrorsMEssageByFieldName('assunto-min')}
               label="Informe o assunto *"
               value={assunto}
-              change={(e) => setAssunto(e.target.value)}
+              change={handleAssuntoChange}
               disabled={isLoadingEmail}
             />
           </FormGrouping>
 
-          <FormGrouping>
+          <FormGrouping error={getErrorsMEssageByFieldName('mensagem') || getErrorsMEssageByFieldName('mensagem-min')}>
             <TextArea
+              error={getErrorsMEssageByFieldName('mensagem') || getErrorsMEssageByFieldName('mensagem-min')}
               label="Escreva sua mensagem *"
               value={mensagem}
-              change={(e) => setMensagem(e.target.value)}
+              change={handleMensagemChange}
               disabled={isLoadingEmail}
             />
           </FormGrouping>
@@ -98,7 +175,7 @@ export default function Contact() {
           <ButtonContainer>
             <Button
               type="submit"
-            //   disabled={!isFormValid}
+              disabled={!isFormValid}
               isLoading={isLoadingEmail}
             >
               Enviar email
