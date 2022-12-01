@@ -27,6 +27,19 @@ export const Content = styled.div`
     margin-top: 16px;
     border-top: 2px solid ${({ theme }) => theme.colors.gray[100]};
     padding-top: 8px;
+
+    table{
+        svg{
+            font-size: 20px;
+        }
+
+        .yes{
+            color: ${({ theme }) => theme.colors.green.success};
+        }
+        .no{
+            color: ${({ theme }) => theme.colors.danger.main};
+        }
+    }
 `;
 
 export const Search = styled.div`

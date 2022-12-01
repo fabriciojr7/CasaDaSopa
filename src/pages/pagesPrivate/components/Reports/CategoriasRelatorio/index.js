@@ -4,29 +4,27 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import reportTitle from '../reportTitle';
 import reportFooter from '../reportFooter';
 
-export default function ColaboradoresPDF(contributors) {
+export default function CategoriasPDF(categories) {
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-  const dados = contributors.map((contrib) => [
-    { text: contrib.id, fontSize: 9, margin: [0, 2, 0, 2] },
-    { text: `${contrib.nome} ${contrib.sobrenome}`, fontSize: 9, margin: [0, 2, 0, 2] },
-    { text: contrib.email, fontSize: 9, margin: [0, 2, 0, 2] },
-    { text: contrib.telefone, fontSize: 9, margin: [0, 2, 0, 2] },
+  const dados = categories.map((category) => [
+    { text: category.id, fontSize: 9, margin: [0, 2, 0, 2] },
+    { text: category.descricao, fontSize: 9, margin: [0, 2, 0, 2] },
+    { text: category.email, fontSize: 9, margin: [0, 2, 0, 2] },
   ]);
 
   const details = [
     {
       table: {
         headerRows: 1,
-        widths: [40, '*', 150, 100],
+        widths: [40, '*', 150],
         body: [
           [
             {
               text: 'CÓDIGO', style: 'tableHeader', fontSize: 10,
             },
-            { text: 'NOME', style: 'tableHeader', fontSize: 10 },
+            { text: 'DESCRIÇÃO', style: 'tableHeader', fontSize: 10 },
             { text: 'E-MAIL', style: 'tableHeader', fontSize: 10 },
-            { text: 'TELEFONE', style: 'tableHeader', fontSize: 10 },
           ],
           ...dados,
         ],
@@ -34,7 +32,7 @@ export default function ColaboradoresPDF(contributors) {
       layout: 'headerLineOnly',
     },
     {
-      text: `TOTAL DE COLABORADORES: ${contributors.length}`,
+      text: `TOTAL DE CATEGORIAS: ${categories.length}`,
       alignment: 'right',
       fontSize: 9,
       bold: true,
@@ -46,7 +44,7 @@ export default function ColaboradoresPDF(contributors) {
     pageSize: 'A4',
     pageMargins: [15, 50, 15, 40],
 
-    header: reportTitle('colaboradores'),
+    header: reportTitle('categorias de doação'),
     content: [details],
     footer: reportFooter,
   };

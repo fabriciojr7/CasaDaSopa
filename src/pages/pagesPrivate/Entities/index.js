@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import {
   Container, Content, Search,
@@ -16,8 +16,6 @@ import InputSearch from '../components/InputSearch';
 import EntidadesPDF from '../components/Reports/EntidadesRelatorio';
 import SearchNotFound from '../components/SearchNotFound';
 import Table from '../components/Table';
-import Modal from '../../../components/Modal';
-import toast from '../../../utils/toast';
 
 export default function Entities() {
   const [entities, setEntities] = useState([]);
@@ -25,9 +23,6 @@ export default function Entities() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [entityBeingDeleted, setEndityBeingDeleted] = useState(null);
-  const [isLoadingDeleted, setIsLoadingDeleted] = useState(false);
 
   const loadEntities = async () => {
     try {
@@ -64,57 +59,10 @@ export default function Entities() {
     loadEntities();
   };
 
-  const handleDeleteEntity = (entity) => {
-    setEndityBeingDeleted(entity);
-    setIsDeleteModalVisible(true);
-  };
-
-  const handleCloseDeleteModal = () => {
-    setIsDeleteModalVisible(false);
-    setEndityBeingDeleted(null);
-  };
-
-  const handleConfirmDeleteEntity = async () => {
-    try {
-      setIsLoadingDeleted(true);
-      await EntityService.deleteEntity(entityBeingDeleted?.id);
-
-      setEntities((prevState) => prevState.filter(
-        (entity) => entity.id !== entityBeingDeleted.id,
-      ));
-
-      handleCloseDeleteModal();
-      toast({
-        type: 'success',
-        text: 'Entidade deletada com sucesso!',
-      });
-    } catch {
-      toast({
-        type: 'danger',
-        text: 'Ocorreu um erro ao deletar a entidade!',
-      });
-    } finally {
-      setIsLoadingDeleted(false);
-    }
-  };
-
   return (
     <Container>
       <HeaderPage title="Entidades" />
       <Loader isLoading={isLoading} />
-
-      <Modal
-        danger
-        visible={isDeleteModalVisible}
-        title={`Tem certeza que deseja remover a entidade ”${entityBeingDeleted?.nome_fantasia}”`}
-        cancelLabel="Cancelar"
-        confirmLabel="Deletar"
-        onCancel={handleCloseDeleteModal}
-        onConfirm={handleConfirmDeleteEntity}
-        loading={isLoadingDeleted}
-      >
-        <p>Esta ação não poderá ser desfeita!</p>
-      </Modal>
 
       {entities.length > 0 && (
         <Search>
@@ -183,11 +131,6 @@ export default function Entities() {
                       <Link to={`/adm/entidades/edit/${entity.id}`}>
                         <FaEdit className="edit" />
                       </Link>
-
-                      <FaTrash
-                        className="remove"
-                        onClick={() => handleDeleteEntity(entity)}
-                      />
                     </td>
                   </tr>
                 ))

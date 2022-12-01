@@ -17,11 +17,11 @@ export default function gruposPDF(groups) {
     {
       table: {
         headerRows: 1,
-        widths: [20, '*'],
+        widths: [40, '*'],
         body: [
           [
-            { text: 'ID', style: 'tableHeader', fontSize: 10 },
-            { text: 'Grupo', style: 'tableHeader', fontSize: 10 },
+            { text: 'CÓDIGO', style: 'tableHeader', fontSize: 10 },
+            { text: 'GRUPO', style: 'tableHeader', fontSize: 10 },
           ],
           ...dados,
         ],
@@ -29,7 +29,7 @@ export default function gruposPDF(groups) {
       layout: 'headerLineOnly',
     },
     {
-      text: `Qtd grupos: ${groups.length}`,
+      text: `TOTAL DE GRUPOS: ${groups.length}`,
       alignment: 'right',
       fontSize: 9,
       bold: true,

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import Loader from '../../../components/Loader';
 import EventService from '../../../services/EventService';
 import dateFormated from '../../../utils/dateFormated';
@@ -117,7 +118,7 @@ export default function ClosedEventView() {
 
       <Content>
 
-        {(filteredResponsaveis.length < 1) && (
+        {(responsaveis.length > 0) && (filteredResponsaveis.length < 1) && (
         <SearchNotFound term={searchTerm} />
         )}
 
@@ -139,7 +140,7 @@ export default function ClosedEventView() {
                   <td data-title="Telefone">
                     {responsavel.telefone}
                   </td>
-                  <td data-title="Presença">{responsavel.presente ? 'Sim' : 'Não'}</td>
+                  <td data-title="Presença">{responsavel.presente ? <FaCheckCircle className="yes" /> : <FaTimesCircle className="no" />}</td>
                 </tr>
               ))}
 

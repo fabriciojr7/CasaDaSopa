@@ -18,13 +18,13 @@ export default function EntidadesPDF(entities) {
     {
       table: {
         headerRows: 1,
-        widths: [20, '*', 100, 100],
+        widths: [40, '*', 100, 100],
         body: [
           [
-            { text: 'ID', style: 'tableHeader', fontSize: 10 },
-            { text: 'Nome fantasia', style: 'tableHeader', fontSize: 10 },
+            { text: 'CÓDIGO', style: 'tableHeader', fontSize: 10 },
+            { text: 'NOME FANTASIA', style: 'tableHeader', fontSize: 10 },
             { text: 'CNPJ', style: 'tableHeader', fontSize: 10 },
-            { text: 'Telefone', style: 'tableHeader', fontSize: 10 },
+            { text: 'TELEFONE', style: 'tableHeader', fontSize: 10 },
           ],
           ...dados,
         ],
@@ -33,7 +33,7 @@ export default function EntidadesPDF(entities) {
       layout: 'headerLineOnly',
     },
     {
-      text: `Qtd entidades: ${entities.length}`,
+      text: `TOTAL DE ENTIDADES: ${entities.length}`,
       alignment: 'right',
       fontSize: 9,
       bold: true,

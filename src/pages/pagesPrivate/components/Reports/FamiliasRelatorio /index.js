@@ -9,7 +9,7 @@ export default function FamiliasPDF(families) {
 
   const dados = families.map((family) => [
     { text: family.id, fontSize: 9, margin: [0, 2, 0, 2] },
-    { text: `${family.nome} ${family.sobrenome}`, fontSize: 9, margin: [0, 2, 0, 2] },
+    { text: family.nome_completo, fontSize: 9, margin: [0, 2, 0, 2] },
     { text: family.telefone, fontSize: 9, margin: [0, 2, 0, 2] },
   ]);
 
@@ -17,12 +17,12 @@ export default function FamiliasPDF(families) {
     {
       table: {
         headerRows: 1,
-        widths: [20, '*', 100],
+        widths: [40, '*', 100],
         body: [
           [
-            { text: 'ID', style: 'tableHeader', fontSize: 10 },
-            { text: 'Responsável', style: 'tableHeader', fontSize: 10 },
-            { text: 'Telefone', style: 'tableHeader', fontSize: 10 },
+            { text: 'CÓDIGO', style: 'tableHeader', fontSize: 10 },
+            { text: 'RESPONSÁVEL', style: 'tableHeader', fontSize: 10 },
+            { text: 'TELEFONE', style: 'tableHeader', fontSize: 10 },
           ],
           ...dados,
         ],
@@ -30,7 +30,7 @@ export default function FamiliasPDF(families) {
       layout: 'headerLineOnly',
     },
     {
-      text: `Qtd famílias: ${families.length}`,
+      text: `TOTAL DE FAMÍLIAS: ${families.length}`,
       alignment: 'right',
       fontSize: 9,
       bold: true,

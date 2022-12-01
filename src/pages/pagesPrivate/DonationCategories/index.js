@@ -14,6 +14,7 @@ import EmptyList from '../components/EmptyList';
 import SearchNotFound from '../components/SearchNotFound';
 import toast from '../../../utils/toast';
 import Modal from '../../../components/Modal';
+import CategoriasPDF from '../components/Reports/CategoriasRelatorio';
 
 export default function DonationCategories() {
   const [categories, setCategories] = useState([]);
@@ -128,6 +129,7 @@ export default function DonationCategories() {
           textPlu=" categorias"
           textButtom="Novo grupo"
           to="/adm/categoriasdoacao/new"
+          print={() => CategoriasPDF(categories)}
         />
 
         {hasError && (

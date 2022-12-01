@@ -13,6 +13,14 @@ class EventService {
     });
   }
 
+  getEventData(data) {
+    return this.httpClient.get(`/presencasPorData/${data}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  }
+
   getOpenEvent() {
     return this.httpClient.get('/presencasEventoAberto/', {
       headers: {

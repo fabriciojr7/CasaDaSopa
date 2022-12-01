@@ -128,7 +128,6 @@ export default function Contributors() {
       )}
 
       <Content>
-
         <HeaderContent
           hasError={hasError}
           filteredArray={filteredContributors}
