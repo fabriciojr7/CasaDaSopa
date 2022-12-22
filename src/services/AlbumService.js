@@ -2,7 +2,7 @@ import HttpClient from './utils/HttpClient';
 
 class AlbumService {
   constructor() {
-    this.httpClient = new HttpClient('https://web-production-7847.up.railway.app/api');
+    this.httpClient = new HttpClient('https://casadasopa-api.herokuapp.com/api');
   }
 
   listAlbunsAll() {

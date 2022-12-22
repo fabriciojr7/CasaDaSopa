@@ -2,7 +2,7 @@ import HttpClient from './utils/HttpClient';
 
 class ContributorGroupService {
   constructor() {
-    this.httpClient = new HttpClient('https://web-production-7847.up.railway.app/api');
+    this.httpClient = new HttpClient('https://casadasopa-api.herokuapp.com/api');
   }
 
   listContributorsGroup() {
